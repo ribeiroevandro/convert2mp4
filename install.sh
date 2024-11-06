@@ -10,8 +10,7 @@ find_base_dir() {
         fi
         dir="$(dirname "$dir")"
     done
-    echo "[ERROR] The 'common' directory was not found."
-    echo "Make sure to run the script from the project directory structure."
+    echo "[ERROR] The 'common' directory was not found. Make sure to run the script from the project directory structure."
     exit 1
 }
 
@@ -22,9 +21,7 @@ base_dir=$(find_base_dir)
 echo "[INFO] Base directory found: $base_dir"
 
 # Verifica se o diretório common existe dentro do diretório base
-if [ -d "$base_dir/common" ]; then
-    echo "[INFO] Found 'common' directory."
-else
+if [ ! -d "$base_dir/common" ]; then
     echo "[ERROR] 'common' directory not found in $base_dir"
     exit 1
 fi
