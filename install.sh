@@ -3,7 +3,13 @@
 # Define o diretório base como o diretório deste script
 base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Importa arquivos de funções e cores do diretório comum
+# Verifica se o diretório common existe no base_dir
+if [ ! -d "$base_dir/common" ]; then
+    echo "[ERROR] The common directory was not found in $base_dir"
+    exit 1
+fi
+
+# Importa arquivos de funções e cores do diretório common
 if [ -f "$base_dir/common/colors.sh" ]; then
     source "$base_dir/common/colors.sh"
 else
@@ -18,9 +24,10 @@ else
     exit 1
 fi
 
-# Detecta o sistema operacional
+# Detecta o sistema operacional usando a função carregada
 detect_os
 
+# Exibe uma mensagem de início da instalação
 echo_info "Starting installation for $OS..."
 
 # Define o diretório de configuração para o script
@@ -46,4 +53,10 @@ case "$OS" in
         # Executa o script para Windows
         "$base_dir/windows/convert2mp4.bat"
         ;;
-   
+    *)
+        echo_error "Unsupported operating system: $OS"
+        exit 1
+        ;;
+esac
+
+echo_success "Installation completed for $OS."
