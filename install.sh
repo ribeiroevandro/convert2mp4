@@ -1,33 +1,40 @@
 #!/bin/bash
 
-# Inclui cores e funções
-source "$(dirname "$0")/common/colors.sh"
-source "$(dirname "$0")/common/functions.sh"
+source "./common/colors.sh"
+source "./common/functions.sh"
 
-# Detecta o sistema operacional e define o caminho
-echo_info "Detecting operating system..."
+# Detecta o sistema operacional
 detect_os
 
-if [[ "$OS" == "Windows" ]]; then
-    config_dir="$USERPROFILE/.config/convert2mp4"
-else
-    config_dir="$HOME/.config/convert2mp4"
-fi
+echo_info "Starting installation for $OS..."
 
-echo_info "Installing convert2mp4 to $config_dir..."
+# Diretório onde o script foi clonado
+config_dir="$HOME/.config/convert2mp4"
 
-# Clona o repositório
-if [[ ! -d "$config_dir" ]]; then
-    mkdir -p "$config_dir"
-    git clone https://github.com/ribeiroevandro/convert2mp4.git "$config_dir"
-fi
+# Verifica o sistema operacional e realiza a instalação conforme necessário
+case "$OS" in
+    "macOS"|"Linux")
+        # Torna o script principal executável
+        chmod +x "$config_dir/convert2mp4.sh"
 
-# Cria link simbólico ou atalho
-if [[ "$OS" == "Windows" ]]; then
-    mklink "$config_dir/convert2mp4.bat" "convert2mp4.bat"  # Usa um script .bat para chamar o .sh
-else
-    ln -s "$config_dir/convert2mp4.sh" "/usr/local/bin/convert2mp4"
-fi
+        # Cria o link simbólico em /usr/local/bin
+        if [ -d "/usr/local/bin" ]; then
+            echo_info "Creating symbolic link for $OS at /usr/local/bin/convert2mp4..."
+            sudo ln -sf "$config_dir/convert2mp4.sh" "/usr/local/bin/convert2mp4"
+            echo_success "Symbolic link created at /usr/local/bin/convert2mp4"
+        else
+            echo_error "Directory /usr/local/bin does not exist or is not accessible."
+            exit 1
+        fi
+        ;;
+    "Windows")
+        # Executa o script para Windows
+        ./windows/convert2mp4.bat
+        ;;
+    *)
+        echo_error "Unsupported operating system: $OS"
+        exit 1
+        ;;
+esac
 
-echo_success "Installation completed successfully. Use 'convert2mp4 --version' to verify."
-exec $SHELL -l  # Atualiza o terminal após a instalação
+echo_success "Installation completed for $OS."
