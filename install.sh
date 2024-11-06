@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Tenta localizar o diretório base do projeto onde `common` está presente
+# Função que encontra o diretório base, percorrendo a árvore de diretórios
 find_base_dir() {
     local dir="$PWD"
     while [[ "$dir" != "/" ]]; do
@@ -10,12 +10,24 @@ find_base_dir() {
         fi
         dir="$(dirname "$dir")"
     done
-    echo "[ERROR] The common directory was not found. Make sure to run the script from within the project directory structure."
+    echo "[ERROR] The common directory was not found."
+    echo "Make sure you are running the script from the project's root directory."
     exit 1
 }
 
-# Define o diretório base do projeto
+# Define o diretório base do projeto chamando a função find_base_dir
 base_dir=$(find_base_dir)
+
+# Exibe o diretório onde a busca terminou
+echo "[INFO] Base directory found: $base_dir"
+
+# Verifica se o diretório common existe dentro do diretório base
+if [ -d "$base_dir/common" ]; then
+    echo "[INFO] Found 'common' directory."
+else
+    echo "[ERROR] 'common' directory not found in $base_dir"
+    exit 1
+fi
 
 # Importa arquivos de funções e cores do diretório common
 if [ -f "$base_dir/common/colors.sh" ]; then
