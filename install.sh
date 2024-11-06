@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Função que encontra o diretório base, percorrendo a árvore de diretórios
+# Função para encontrar o diretório base do projeto
 find_base_dir() {
     local dir="$PWD"
     while [[ "$dir" != "/" ]]; do
@@ -10,15 +10,15 @@ find_base_dir() {
         fi
         dir="$(dirname "$dir")"
     done
-    echo "[ERROR] The common directory was not found."
-    echo "Make sure you are running the script from the project's root directory."
+    echo "[ERROR] The 'common' directory was not found."
+    echo "Make sure to run the script from the project directory structure."
     exit 1
 }
 
-# Define o diretório base do projeto chamando a função find_base_dir
+# Define o diretório base chamando a função find_base_dir
 base_dir=$(find_base_dir)
 
-# Exibe o diretório onde a busca terminou
+# Exibe onde o diretório foi encontrado
 echo "[INFO] Base directory found: $base_dir"
 
 # Verifica se o diretório common existe dentro do diretório base
@@ -29,7 +29,7 @@ else
     exit 1
 fi
 
-# Importa arquivos de funções e cores do diretório common
+# Verifica se os arquivos colors.sh e functions.sh existem dentro do diretório common
 if [ -f "$base_dir/common/colors.sh" ]; then
     source "$base_dir/common/colors.sh"
 else
@@ -44,13 +44,13 @@ else
     exit 1
 fi
 
-# Detecta o sistema operacional usando a função carregada
+# Detecta o sistema operacional
 detect_os
 
 # Exibe uma mensagem de início da instalação
 echo_info "Starting installation for $OS..."
 
-# Define o diretório de configuração para o script
+# Define o diretório de configuração
 config_dir="$HOME/.config/convert2mp4"
 
 # Verifica o sistema operacional e realiza a instalação conforme necessário
@@ -59,7 +59,7 @@ case "$OS" in
         # Torna o script principal executável
         chmod +x "$config_dir/convert2mp4.sh"
 
-        # Cria o link simbólico em /usr/local/bin
+        # Cria o link simbólico
         if [ -d "/usr/local/bin" ]; then
             echo_info "Creating symbolic link for $OS at /usr/local/bin/convert2mp4..."
             sudo ln -sf "$config_dir/convert2mp4.sh" "/usr/local/bin/convert2mp4"
