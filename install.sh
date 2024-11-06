@@ -1,15 +1,16 @@
 #!/bin/bash
 
-# Define o diretório base como o diretório deste script
+# Define o diretório base como o diretório deste script (absoluto e consistente)
 base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Verifica se o diretório common existe no base_dir
+# Verifica se o diretório `common` existe
 if [ ! -d "$base_dir/common" ]; then
     echo "[ERROR] The common directory was not found in $base_dir"
+    echo "Make sure you are running install.sh from within the project's root directory."
     exit 1
 fi
 
-# Importa arquivos de funções e cores do diretório common
+# Importa arquivos de funções e cores
 if [ -f "$base_dir/common/colors.sh" ]; then
     source "$base_dir/common/colors.sh"
 else
@@ -24,24 +25,22 @@ else
     exit 1
 fi
 
-# Detecta o sistema operacional usando a função carregada
+# Detecta o sistema operacional
 detect_os
 
-# Exibe uma mensagem de início da instalação
 echo_info "Starting installation for $OS..."
 
 # Define o diretório de configuração para o script
 config_dir="$HOME/.config/convert2mp4"
 
-# Verifica o sistema operacional e realiza a instalação conforme necessário
+# Lógica de instalação com base no sistema operacional detectado
 case "$OS" in
     "macOS"|"Linux")
-        # Torna o script principal executável
+        # Define o script principal como executável e cria link simbólico
         chmod +x "$config_dir/convert2mp4.sh"
 
-        # Cria o link simbólico em /usr/local/bin
         if [ -d "/usr/local/bin" ]; then
-            echo_info "Creating symbolic link for $OS at /usr/local/bin/convert2mp4..."
+            echo_info "Creating symbolic link at /usr/local/bin/convert2mp4..."
             sudo ln -sf "$config_dir/convert2mp4.sh" "/usr/local/bin/convert2mp4"
             echo_success "Symbolic link created at /usr/local/bin/convert2mp4"
         else
