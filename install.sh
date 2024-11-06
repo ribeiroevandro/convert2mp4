@@ -1,14 +1,29 @@
 #!/bin/bash
 
-source "./common/colors.sh"
-source "./common/functions.sh"
+# Define o diretório base como o diretório deste script
+base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Importa arquivos de funções e cores do diretório comum
+if [ -f "$base_dir/common/colors.sh" ]; then
+    source "$base_dir/common/colors.sh"
+else
+    echo "[ERROR] colors.sh not found in $base_dir/common"
+    exit 1
+fi
+
+if [ -f "$base_dir/common/functions.sh" ]; then
+    source "$base_dir/common/functions.sh"
+else
+    echo "[ERROR] functions.sh not found in $base_dir/common"
+    exit 1
+fi
 
 # Detecta o sistema operacional
 detect_os
 
 echo_info "Starting installation for $OS..."
 
-# Diretório onde o script foi clonado
+# Define o diretório de configuração para o script
 config_dir="$HOME/.config/convert2mp4"
 
 # Verifica o sistema operacional e realiza a instalação conforme necessário
@@ -29,12 +44,6 @@ case "$OS" in
         ;;
     "Windows")
         # Executa o script para Windows
-        ./windows/convert2mp4.bat
+        "$base_dir/windows/convert2mp4.bat"
         ;;
-    *)
-        echo_error "Unsupported operating system: $OS"
-        exit 1
-        ;;
-esac
-
-echo_success "Installation completed for $OS."
+   
