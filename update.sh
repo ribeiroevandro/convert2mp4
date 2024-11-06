@@ -20,14 +20,14 @@ git pull origin main
 script_path="$config_dir/convert2mp4.sh"
 if [ -f "$script_path" ]; then
   # Remove o link simbólico antigo, se existir
-  sudo rm -f /usr/local/bin/convert2mp4
+  rm -f /usr/local/bin/convert2mp4
   # Cria um novo link simbólico
   echo "#!/bin/bash" | sudo tee /usr/local/bin/convert2mp4 > /dev/null
   echo "config_dir=\"\$HOME/.config/convert2mp4\"" | sudo tee -a /usr/local/bin/convert2mp4 > /dev/null
   echo "\$config_dir/convert2mp4.sh \"\$@\"" | sudo tee -a /usr/local/bin/convert2mp4 > /dev/null
 
   # Dê permissão de execução ao novo wrapper
-  sudo chmod +x /usr/local/bin/convert2mp4
+  chmod +x /usr/local/bin/convert2mp4
 
   echo "convert2mp4 has been updated successfully."
 else

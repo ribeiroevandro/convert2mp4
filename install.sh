@@ -46,7 +46,7 @@ fi
 
 # Criar link simbólico no /usr/local/bin
 echo_info "Creating symbolic link in $BIN_DIR..."
-sudo ln -sf "$INSTALL_DIR/convert2mp4.sh" "$BIN_DIR/convert2mp4"
+ln -sf "$INSTALL_DIR/convert2mp4.sh" "$BIN_DIR/convert2mp4"
 
 # Atualizar o terminal
 echo_success "Installation complete. The convert2mp4 command is now available."
